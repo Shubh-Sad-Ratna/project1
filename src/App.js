@@ -1,25 +1,35 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import TitleForm from './components/TitleForm';
+import TitleList from './components/TitleList';
 import './App.css';
 
 function App() {
+  const [titles, setTitles] = useState([]);
+
+  const addTitle = (title, password) => {
+    setTitles([...titles, { title, password, id: Date.now() }]);
+  };
+
+  const deleteTitle = (id) => {
+    setTitles(titles.filter(title => title.id !== id));
+  };
+
+  const editTitle = (id, newTitle, newPassword) => {
+    setTitles(titles.map(title => title.id === id ? { ...title, title: newTitle, password: newPassword } : title));
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="Header">
+        <h1>Password Keeper</h1>
+        <p>Total Password: {titles.length}</p>
+      </div>
+      
+      <TitleForm addTitle={addTitle} />
+      <TitleList titles={titles} deleteTitle={deleteTitle} editTitle={editTitle} />
     </div>
   );
 }
 
 export default App;
+
