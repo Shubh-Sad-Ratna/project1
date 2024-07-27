@@ -1,35 +1,34 @@
 import React, { useState } from 'react';
-import TitleForm from './components/TitleForm';
-import TitleList from './components/TitleList';
-import './App.css';
+import { PasswordProvider } from './PasswordContext';
+import Header from './components/Header';
+import PasswordList from './components/PasswordList';
+import PasswordModal from './components/PasswordModal';
+import SearchBar from './components/SearchBar';
 
 function App() {
-  const [titles, setTitles] = useState([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const addTitle = (title, password) => {
-    setTitles([...titles, { title, password, id: Date.now() }]);
+  const openModal = () => {
+    setModalIsOpen(true);
   };
 
-  const deleteTitle = (id) => {
-    setTitles(titles.filter(title => title.id !== id));
-  };
-
-  const editTitle = (id, newTitle, newPassword) => {
-    setTitles(titles.map(title => title.id === id ? { ...title, title: newTitle, password: newPassword } : title));
+  const closeModal = () => {
+    setModalIsOpen(false);
   };
 
   return (
-    <div className="App">
-      <div className="Header">
-        <h1>Password Keeper</h1>
-        <p>Total Password: {titles.length}</p>
+    <PasswordProvider>
+      <div className="container mt-5">
+        <Header />
+        <div className="mb-3">
+          <button className="btn btn-primary" onClick={openModal}>Add New Password</button>
+        </div>
+        <SearchBar />
+        <PasswordList />
+        <PasswordModal isOpen={modalIsOpen} closeModal={closeModal} />
       </div>
-      
-      <TitleForm addTitle={addTitle} />
-      <TitleList titles={titles} deleteTitle={deleteTitle} editTitle={editTitle} />
-    </div>
+    </PasswordProvider>
   );
 }
 
 export default App;
-
